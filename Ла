@@ -1,0 +1,41 @@
+import telebot
+from telebot import types
+
+# Замените 'YOUR_BOT_API_TOKEN' на токен вашего бота
+API_TOKEN = '6516052648:AAERsQ_Eduhlsjifm457rUy73KwGEZzkdTg'
+bot = telebot.TeleBot(API_TOKEN)
+
+# Словарь для хранения тем для пользователей
+user_topics = {}
+
+# Обработчик команды /start
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.reply_to(message, "Здравствуйте! Обращайтесь с вашими вопросами, и мы поможем вам.")
+
+# Обработчик сообщений
+@bot.message_handler(func=lambda message: True)
+def handle_message(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    user_name = message.from_user.username or message.from_user.first_name
+    
+    if chat_id not in user_topics:
+        user_topics[chat_id] = {}
+    
+    if user_id not in user_topics[chat_id]:
+        # Создание новой темы для пользователя
+        topic_message = f"Тема поддержки для {user_name} (ID: {user_id}):\n{message.text}"
+        bot.send_message(chat_id, topic_message)
+        user_topics[chat_id][user_id] = topic_message
+    else:
+        # Обновление существующей темы
+        topic_message = user_topics[chat_id][user_id] + "\n\n" + message.text
+        user_topics[chat_id][user_id] = topic_message
+
+    # Уведомление администратора (замените admin_chat_id на ID администратора)
+    admin_chat_id = '6578018656'
+    bot.send_message(admin_chat_id, f"Новое сообщение от {user_name} (ID: {user_id}):\n{message.text}")
+
+# Запуск бота
+bot.polling()
