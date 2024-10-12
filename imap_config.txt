@@ -1,0 +1,2 @@
+imap.jlchacha.com 993 jl
+imap.dd8688.shop 993 up
