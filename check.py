@@ -11,10 +11,10 @@ TELEGRAM_BOT_TOKEN = '7859317490:AAHi6lghknwbKU0fPHULZKyl42aGcG1lNyM'
 CHAT_ID = '7412395676'
 
 # Настройки прокси (логин, пароль, хост, порт)
-PROXY_HOST = 'proxy_host'
-PROXY_PORT = 1080  # например, 1080 для SOCKS5
-PROXY_USERNAME = 'proxy_username'
-PROXY_PASSWORD = 'proxy_password'
+PROXY_HOST = '178.171.69.74'
+PROXY_PORT = 8000  # например, 1080 для SOCKS5
+PROXY_USERNAME = '4a3P3R'
+PROXY_PASSWORD = 'X2S9nB'
 
 # Глобальные счетчики
 checked_count = 0
